@@ -32,8 +32,27 @@ print.benfords<-function(x){
   require(data.table)
   results<-benfordtests(x) ##Depends on the benfordtests function above
   r<-c(results[[2]], results[[3]]) ##This is a vector with the stats
-  table1<-data.frame(stats=c(r[1], r[2]), row.names=c("M", "D")) ##This is a data table of the results
-  print("Significance Codes: <0.01=*** <0.05=** <0.10=*") ##Returns code
+  ast<-NULL ##empty vector for signif codes
+  ##This if else code tells the computer to pick the right number of
+  ##asterisks based on significance for the m stat
+  asterisks1<-if (results[[2]]>=0.851 & results[[2]]<0.967) {ast="*"
+  }else {
+    if(results[[2]]>=0.967 & results[[2]]<1.212) {ast="**"} else {
+      if(results[[2]]>=1.212) {ast="***"} else {ast=" "}}
+  }
+  ##This code is the same as above but for the d stat signif codes
+  ast2<-NULL
+  asterisks2<-if (results[[3]]>=1.212 & results[[3]]<1.330) {ast2="*"
+  }else {
+    if(results[[3]]>=1.330 & results[[3]]<1.569) {ast2="**"} else {
+      if(results[[3]]>=1.569) {ast2="***"} else {ast2=" "}}
+  }
+  ##This creates a dataframe of the stats and their signifs
+  table1<-data.frame(stats=c(r[1], r[2])
+                     ,signif=c(ast,ast2)
+                     , row.names=c("M", "D")) ##This is a data table of the results
+  
+  print("Significance Codes: <0.01=*** <0.05=** <0.10=* >0.10 wil return blank ") ##Returns code
   print(table1)##Returns stats and will return asterisks
 }
 
