@@ -164,3 +164,31 @@ tester<-function(){
 
 tester()
 
+#############breaking the function 1: Fail to get proper distribution######
+
+benfordtests<-function(x, dist=TRUE, mstat=TRUE, dstat=TRUE){
+  require(BenfordTests)##Benford Tests is supported for R 3.0.0 or later only
+  fdig<- signifd(x, 1) ##this is the first digits function. Returns first significant digit
+  n<-length(fdig) ##Calculate n 
+  digfreq<-table(c(fdig, seq(1,9)))-1 ##This is a table including the ##first signif digits in the data and a sequence of 1 to 9. 
+  rfreq<-digfreq ##This is the frequency each digit is observed in the actual data
+  rfreq_hyp<-pbenf(1) ##pbenf gives the proportion we should get 
+  ##in theory if the data matches Benford. This is the same as log (1+1/d)
+  m<-sqrt(n)*max(abs(rfreq - rfreq_hyp)) ##As noted rfreq_hyp is the 
+  ##same as log (1+1/d), whereas rfreq is the relative frequency of the 
+  ##digits for the data in question. The max simply selects whichever is the max
+  ##of the digits being seen as per the formula. 
+  d<-sqrt(n)*sqrt(sum((rfreq-rfreq_hyp)^2)) ##Same as above but with sum instead for the d stat
+  reslist<-list(rfreq=rfreq, m=m, d=d)
+  everything<-all(dist, mstat, dstat)
+  if (everything==TRUE) {return(reslist)} 
+  if (everything==FALSE & dist==TRUE){print(reslist[1])}
+  if (everything==FALSE & mstat==TRUE){print(reslist[2])}
+  if(everything==FALSE & dstat==TRUE) {print(reslist[3])}
+}
+
+tester()
+##Tester returns 6 warnings because the distribution was wrong,
+##everything was wrong. OOPS! forgot to divide by n when calculating
+##rfreq. This will make the distribution be the raw frequency of each
+##significant digit, not the relative frequency that we want!
