@@ -19,10 +19,11 @@ benfordtests<-function(x){
   ##same as log (1+1/d), whereas rfreq is the relative frequency of the 
   ##digits for the data in question. The max simply selects whichever is the max
   ##of the digits being seen as per the formula. 
-  return(list(rfreq, m))               
+  d<-sqrt(n)*sqrt(sum((rfreq-rfreq_hyp)^2)) ##Same as above but with sum instead for the d stat
+  return(list(rfreq, m, d))               
 }
 benfordtests(x)
 
 mdist.benftest(x, digits=1) ##Test my own function against the one in the Benford Test package
-#p-value = 0.6421
+edist.benftest(x) ##Test my own function against BenfordTests one
 
