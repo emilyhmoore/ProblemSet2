@@ -1,5 +1,7 @@
 rm(list=ls())
 
+#############Problem 1#############
+
 #Set the random seed to an arbitrary number
 set.seed(100)
 #Create a sample satisfying Benford's law
@@ -25,9 +27,12 @@ benfordtests<-function(x){
 
 benfordtests(x)
 
+require(BenfordTests) ##Note: This is supported by R 3.0.0 or later only
+
 mdist.benftest(x, digits=1) ##Test my own function against the one in the Benford Test package
 edist.benftest(x) ##Test my own function against BenfordTests one
 
+##########Print Benfords Function, Problem 2 ############
 print.benfords<-function(x){
   require(data.table)
   results<-benfordtests(x) ##Depends on the benfordtests function above
@@ -52,9 +57,37 @@ print.benfords<-function(x){
                      ,signif=c(ast,ast2)
                      , row.names=c("M", "D")) ##This is a data table of the results
   
-  print("Significance Codes: <0.01=*** <0.05=** <0.10=* >0.10 wil return blank ") ##Returns code
   print(table1)##Returns stats and will return asterisks
+  print("Significance Codes: <0.01=*** <0.05=** <0.10=* >0.10 wil return blank ") ##Returns code
+  
 }
 
 print.benfords(x) ##Uses a benford process so should not be sig
 print.benfords(y) ##Should be sig different from benford process
+
+tester<-function()
+  {#Set the random seed to an arbitrary number
+  set.seed(100)
+  #Create a sample satisfying Benford's law
+  x<-rbenf(n=20)
+  #Create a set of data that does NOT satisfy Benford's law
+  y<-seq(1, 20)
+  
+  ##This is easily calculable by hand because there are so few numbers.
+  targety1<-c(11/20, 2/20, rep(1/20, 7)) 
+  resy1<-benfordtests(y)[[1]]
+  resy1<-as.numeric(resy1)
+  
+  truey1<-all.equal(current=resy1, target=targety1)
+
+  ##We know from the distribution that 1 occurs 11 times (the most) as the first sig
+  ##digit. I subtracted this from the expected value of 1.
+  targetym<-as.vector(sqrt(20) * abs(0.55- pbenf(1)[1]))
+  ##Result from function:
+  resy2<-as.vector(benfordtests(y)[[2]])
+  ##Are they equal?
+  truey2<-all.equal(current=resy2, target=targetym)
+
+
+}
+
