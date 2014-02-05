@@ -65,6 +65,7 @@ print.benfords<-function(x){
 }
 
 print.benfords(x) ##Uses a benford process so should not be sig
+y<-seq(1,20)
 print.benfords(y) ##Should be sig different from benford process
 
 tester<-function(){
@@ -81,28 +82,28 @@ tester<-function(){
   targetx1<-c(5/20, 6/20, 3/20, 3/20, 1/20, 1/20, 1/20, 0, 0)
   resx1<-as.numeric(benfordtests(x)[[1]])##Results from function
   ##Are they equal?
-  truex1<-all.equal(current=resx1, target=targetx1) 
+  truex1<-all(resx1==targetx1) 
   
   ##Target for the m statistic for x vector
   targetxm<-as.vector(sqrt(20) * abs(6/20- pbenf(1)[2]))
   ##Result from function:
   resx2<-as.vector(benfordtests(x)[[2]])
   ##Are they equal?
-  truex2<-all.equal(current=resx2, target=targetxm)
+  truex2<-resx2==targetxm
   
   ##Target for the d statistic for x vector
   targetxd<-as.vector(sqrt(20)*sqrt(sum((targetx1-pbenf(1))^2)))
   ##Results for d from function
   resx3<-benfordtests(x)[[3]]
   ##Returns TRUE if the target matches the function results
-  truex3<-all.equal(current=resx3, target=targetxd)
+  truex3<-resx3==targetxd
   
   ##This is easily calculable by hand because there are so few numbers.
   targety1<-c(11/20, 2/20, rep(1/20, 7))
   resy1<-benfordtests(y)[[1]]
   resy1<-as.numeric(resy1)
   ##Are they equal?
-  truey1<-all.equal(current=resy1, target=targety1)
+  truey1<-all(resy1==targety1)
 
   ##We know from the distribution that 1 occurs 11 times (the most) as the first sig
   ##digit. I subtracted this from the expected value of 1.
@@ -110,14 +111,14 @@ tester<-function(){
   ##Result from function:
   resy2<-as.vector(benfordtests(y)[[2]])
   ##Are they equal?
-  truey2<-all.equal(current=resy2, target=targetym)
+  truey2<-resy2==targetym
   
   ##Target d for y vector
   targetyd<-as.vector(sqrt(20)*sqrt(sum((targety1-pbenf(1))^2)))
   ##Results for d from function
   resy3<-benfordtests(y)[[3]]
   ##Returns TRUE if the target matches the function results
-  truey3<-all.equal(current=resy3, target=targetyd)
+  truey3<-resy3==targetyd
   
   ##Vector of Logicals from above
   logvec<-c(truex1, truex2, truex3, truey1, truey2, truey3)
@@ -143,3 +144,7 @@ tester<-function(){
 }
 ##Running the tester function
 tester()
+
+
+
+
