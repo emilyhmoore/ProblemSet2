@@ -22,8 +22,20 @@ benfordtests<-function(x){
   d<-sqrt(n)*sqrt(sum((rfreq-rfreq_hyp)^2)) ##Same as above but with sum instead for the d stat
   return(list(rfreq, m, d))               
 }
+
 benfordtests(x)
 
 mdist.benftest(x, digits=1) ##Test my own function against the one in the Benford Test package
 edist.benftest(x) ##Test my own function against BenfordTests one
 
+print.benfords<-function(x){
+  require(data.table)
+  results<-benfordtests(x) ##Depends on the benfordtests function above
+  r<-c(results[[2]], results[[3]]) ##This is a vector with the stats
+  table1<-data.frame(stats=c(r[1], r[2]), row.names=c("M", "D")) ##This is a data table of the results
+  print("Significance Codes: <0.01=*** <0.05=** <0.10=*") ##Returns code
+  print(table1)##Returns stats and will return asterisks
+}
+
+print.benfords(x) ##Uses a benford process so should not be sig
+print.benfords(y) ##Should be sig different from benford process
