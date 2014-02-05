@@ -11,7 +11,7 @@ x<-rbenf(n=20)
 ##Takes a vector of numbers and returns the Leemis m statistic. 
 ##Note that unlike the function that performs this in the BenfordTest
 ##Package, this function will only calculate for one significant digit. 
-benfordtests<-function(x){
+benfordtests<-function(x, dist=TRUE, mstat=TRUE, dstat=TRUE){
   require(BenfordTests)##Benford Tests is supported for R 3.0.0 or later only
   fdig<- signifd(x, 1) ##this is the first digits function. Returns first significant digit
   n<-length(fdig) ##Calculate n 
@@ -24,10 +24,12 @@ benfordtests<-function(x){
   ##digits for the data in question. The max simply selects whichever is the max
   ##of the digits being seen as per the formula. 
   d<-sqrt(n)*sqrt(sum((rfreq-rfreq_hyp)^2)) ##Same as above but with sum instead for the d stat
-  return(list(rfreq, m, d))               
+  if (dist==TRUE){print(list(Benford_Distribution=rfreq))}
+  if (mstat==TRUE){print(list(m=m))}
+  if(dstat==TRUE) {print(list(d=d))}
 }
 
-benfordtests(x)
+benfordtests(x, dstat=FALSE)
 
 require(BenfordTests) ##Note: This is supported by R 3.0.0 or later only
 
