@@ -7,10 +7,11 @@ set.seed(100)
 #Create a sample satisfying Benford's law
 require(BenfordTests) ##Supported by R 3.0.0 or later
 x<-rbenf(n=20)
+y<-seq(1,20)
+z<-cbind(x,y)
 
-##Takes a vector of numbers and returns the Leemis m statistic. 
-##Note that unlike the function that performs this in the BenfordTest
-##Package, this function will only calculate for one significant digit. 
+##Will take vector or matrix and return a single value for the entire 
+##vector or matrix. 
 benfordtests<-function(x, dist=TRUE, mstat=TRUE, dstat=TRUE){
   require(BenfordTests)##Benford Tests is supported for R 3.0.0 or later only
   fdig<- signifd(x, 1) ##this is the first digits function. Returns first significant digit
@@ -32,12 +33,9 @@ benfordtests<-function(x, dist=TRUE, mstat=TRUE, dstat=TRUE){
   if(everything==FALSE & dstat==TRUE) {print(reslist[3])}
 }
 
+##Examples
 benfordtests(x, dist=FALSE, dstat=FALSE)
-
-require(BenfordTests) ##Note: This is supported by R 3.0.0 or later only
-
-mdist.benftest(x, digits=1) ##Test my own function against the one in the Benford Test package
-edist.benftest(x) ##Test my own function against BenfordTests one
+benfordtests(z)
 
 ##########Print Benfords Function, Problem 2 ############
 print.benfords<-function(x){
@@ -63,15 +61,14 @@ print.benfords<-function(x){
   table1<-data.frame(stats=c(r[1], r[2])
                      ,signif=c(ast,ast2)
                      , row.names=c("M", "D")) ##This is a data table of the results
-  
-  print(table1)##Returns stats and will return asterisks
-  print("Significance Codes: <0.01=*** <0.05=** <0.10=* >0.10 wil return blank ") ##Returns code
-  
+  legend<-"<0.01=*** <0.05=** <0.10=* >0.10 will return blank "
+  return(list(Results=table1, Significance_Codes=legend))
+  ##^^Returns stats and asterisks
 }
 
 print.benfords(x) ##Uses a benford process so should not be sig
-y<-seq(1,20)
 print.benfords(y) ##Should be sig different from benford process
+print.benfords(z) ##Not Sig diff from benford process
 
 tester<-function(){
   #Set the random seed to an arbitrary number
